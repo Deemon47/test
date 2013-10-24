@@ -127,7 +127,7 @@ function getJSArr($arr,$save_spaces=false)
 		if(is_bool($val))
 			$val=$val?'true':'false';
 		elseif(is_array($val) || is_object($val))
-			$val=_::getJSArr($val,$save_spaces);
+			$val=getJSArr($val,$save_spaces);
 		else
 		{
 			$val=is_numeric($val)?$val:'\''.str_replace(['\\','\''], ['\\\\','\\\''], $val).'\'';

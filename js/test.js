@@ -12,11 +12,13 @@ _.test=
 	'field_list':[],
 	'table_o':false,
 	'fields_o':false,
+	'order_by_o':false,
 	'limit_o':false,
 	'pager':false,
 	'clear_counter':0,
-	'finded_o':false,
+	'found_o':false,
 	'timeout_o':false,
+	'url_o':false,
 	'_init':function()
 	{
 		$('._clear_base').click(function(){
@@ -31,10 +33,11 @@ _.test=
 			_.test.getData(data.limit,data.page);
 		},{}).appendTo('.table .bottom');
 		this.table_o=$('._table');
-		var url_o=$(':input[name=url]');
+		this.url_o=$(':input[name=url]');
 		this.timeout_o=$(':input[name=timeout]');
 		this.fields_o=$(':input[name=fields]');
-		this.finded_o=$(':input[name=finded]');
+		this.order_by_o=$(':input[name=order_by]');
+		this.found_o=$(':input[name=found]');
 		this.limit_o=$(':input[name=limit]');
 		$('._start_stop').click(function(){
 			var o =$(this);
@@ -42,7 +45,7 @@ _.test=
 			{
 				_.mess.show("Произведен запуск парсера");
 				o.removeClass('green').find('button').html('Остановить <i class="awico-stop"></i>');
-				_.test._ajax(url_o.val(),{'action':'start','desc':'Идет обработка резюме'/*,'sys':false,'params':false*/});
+				_.test._ajax(_.test.url_o.val(),{'action':'start','desc':'Идет обработка резюме'/*,'sys':false,'params':false*/});
 
 
 			}
@@ -61,7 +64,7 @@ _.test=
 	'getData':function(limit,page)
 	{
 
-		var data={'fields':this.fields_o.val(),'limit':limit,'page':page};
+		var data={'fields':this.fields_o.val(),'order_by':this.order_by_o.val(),'limit':limit,'page':page};
 		if(data.fields==null)
 			_.mess.show('Нужно выбрать хотябы одно поле','warning');
 		else
@@ -71,7 +74,7 @@ _.test=
 	{
 		clearInterval(_.test.timer);
 		_.test.timer=setInterval(_.test.doTask,30000);
-		_.test._ajax(false,{'action':'next_task','desc':'Идет обработка резюме',/*'sys':false,'params':false*/});
+		_.test._ajax(_.test.url_o.val(),{'action':'next_task','desc':'Идет обработка резюме',/*'sys':false,'params':false*/});
 		if(_.test.clear_counter>10)
 		{
 			$('ul._elog').empty();
@@ -106,7 +109,7 @@ _.test=
 				_.mess.show('Запуск не удался','error');
 			}
 			else
-			setTimeout(this.doTask,parseInt(this.timeout_o.val())*1000);
+				setTimeout(this.doTask,parseInt(this.timeout_o.val())*1000);
 		}
 		else if(e.action=='next_task')
 		{
@@ -118,7 +121,7 @@ _.test=
 			}
 			else
 				setTimeout(this.doTask,parseInt(this.timeout_o.val())*1000);
-			this.finded_o.val(data.success);
+			this.found_o.val(data.success);
 
 		}
 		else if(e.action=='get_data')
@@ -142,6 +145,7 @@ _.test=
 			}
 			table+='</tbody></table>';
 			this.table_o.html(table);
+			this.found_o.val(data.total);
 			_.pager.update(this.pager,data.total);
 		}
 

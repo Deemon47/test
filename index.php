@@ -6,7 +6,9 @@
  *	@version 1
  *	@author Deemon<a@dee13.ru>
  */
-$ELOG=true;
+$ELOG=
+// true;
+false;
 /*Разбор URL */
 	$URL=strtolower(str_replace(['\'','?'.$_SERVER['QUERY_STRING']],'',$_SERVER['REQUEST_URI']));
 	$LINKS=explode('/',substr($URL,1));
@@ -30,8 +32,7 @@ conn::init(
 if(count($LINKS)>0 && $LINKS[0]=='ajax')
 {
 	include('src/ajax.php');
-	elog('data');
-	// die(' ');
+	die(' ');
 }
 ?><!doctype html>
 <html lang="en">
@@ -43,10 +44,10 @@ if(count($LINKS)>0 && $LINKS[0]=='ajax')
 	<script src="/js/jquery.js"></script>
 	<script src="/js/engine.js"></script>
 	<script src="/js/prot_sys.js"></script>
-	<script src="/js/hot_keys.js"></script>
-	<script src="/js/m_win.js"></script>
 	<script src="/js/mess.js"></script>
+	<script src="/js/page.js"></script>
 	<script src="/js/pager.js"></script>
+	<script src="/js/test.js"></script>
 </head>
 <body>
 <div class="m-wrap admin">
@@ -59,46 +60,54 @@ if(count($LINKS)>0 && $LINKS[0]=='ajax')
 				<label>
 					Текст адресной строки:
 					<span>
-						<input type="text" name="">
+						<input type="text" name="url" value="http://torg.uz/ru/catalog/programmisty-it-internet-rezyume">
 					</span>
 				</label>
 			</div>
-			<div class="i button green">
+
+			<div class="i text micro">
+				<label>
+					Задержка (сек.):
+					<span>
+						<input type="text" name="timeout" value="1">
+					</span>
+				</label>
+			</div>
+			<br>
+			<div class="i text micro">
+				<label>
+					Получено резюме:
+					<span>
+						<input type="text" name="found" value="0" readonly="readonly">
+					</span>
+				</label>
+			</div>
+			<div class="i button green _start_stop">
 				<label ><button>Запустить <i class="awico-play"></i></button></label>
+			</div>
+			<div class="i button red _clear_base">
+				<label ><button>Очистить базу <i class="awico-trash"></i></button></label>
 			</div>
 		</fieldset >
 		<fieldset>
 			<legend>Настройка вывода</legend>
 			<div class="i select">
 				<label for="">Выводимые поля:
-					<select name="" id="" multiple="multiple">
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
+					<select name="fields" id="" multiple="multiple">
 					</select>
 				</label>
 			</div>
 			<div class="i select">
 				<label for="">Сортировать по:
-					<select name="" >
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
-						<option>asjkdlf</option>
+					<select name="order_by" >
 					</select>
 				</label>
 			</div>
 
-			<div class="i button green">
+			<div class="i button  _update_fields">
+				<label ><button>Обновить список полей <i class="awico-refresh"></i></button></label>
+			</div>
+			<div class="i button green _show">
 				<label ><button>Вывести <i class="awico-ok"></i></button></label>
 			</div>
 			<br>
@@ -108,70 +117,15 @@ if(count($LINKS)>0 && $LINKS[0]=='ajax')
 				<h3>Полученные резюме</h3>
 
 				<ul class="buttons">
-					<li title="Добавить">
-						<span class="awico-plus-sign"></span>
-					</li>
-					<li title="Редактировать">
-						<span class="awico-pencil"></span>
-					</li>
-					<li title="Удалить">
-						<span class="awico-remove-sign"></span>
-					</li>
-					<li title="Сортировать">
-						<span class="awico-random"></span>
-					</li>
-					<li title="Фильтр">
-						<span class="awico-filter"></span>
-					</li>
-					<li title="Экспорт">
-						<span class="awico-download-alt"></span>
-					</li>
+
 				</ul>
 
 			</div>
 
-			<table>
-				<thead>
-					<tr>
-						<th>
-							<span>&nbsp;</span>
-						</th>
-						<th class="awico-sort">
-							<span>Дата</span>
-						</th>
-						<th class="awico-sort-up">
-							<span>Дата и время</span>
-						</th>
-						<th class="awico-sort-down">
-							<span>Название проекта</span>
-						</th>
+			<div class="_table"></div>
+			<div class="bottom"></div>
 
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Мой проект</td>
-						<td>Мой большой проект</td>
-						<td>Мой большой проект</td>
-						<td>Мой большой проект</td>
-					</tr>
-				</tbody>
-			</table>
 
-			<div class="bottom">
-
-				<p class="limit">Показаны 1 до 10, <input type="text" value="223"> записей</p>
-				<span class="pager">
-					<span class="awico-arrow-left"> Предыдущая</span>
-					<span>1</span>
-					<input type="text" value="299"/>
-					<span>3</span>
-					<span >Следущая <i class="awico-arrow-right"></i></span>
-				</span>
-
-			</div>
-
-		</div>
 		</fieldset>
 		</div>
 	</div>

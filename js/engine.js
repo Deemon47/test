@@ -155,7 +155,7 @@ var _ =
 		else
 			this._ajax_boom=true;
 	},
-	'_ajax_boom':[],
+	'_ajax_boom':true,
 	'_requests': [],
 	/*Аякс запрос*/
 	'ajax': function(f_name, data, func_name,params)

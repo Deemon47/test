@@ -67,10 +67,10 @@ UL.list.num{list-style-type: decimal;}
 /*wrapper*/
 .m-wrap{background: url("../../images/style/bg/opacity.png") transparent; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; box-shadow: 0 1px 1px #606060, 0 1px 1px #2a2a2a inset; -webkit-box-shadow: 0 1px 1px #606060, 0 1px 1px #2a2a2a inset; -moz-box-shadow: 0 1px 1px #606060, 0 1px 1px #2a2a2a inset;display:inline-block;}
 .m-wrap-inner{background: url("../../images/style/bg/bg.png"); border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;padding: 6px;margin: 6px;}
-.m-wrap-cont{height:100%;min-height: 500px}
+.site .m-wrap-cont,
+.elog .m-wrap-cont{height:100%;min-height: 500px}
 .m-wrap{width:100%}
 .elog{margin-bottom:0}
-.site .m-wrap-cont,.admin .m-wrap-cont,.sys-block .m-wrap-cont{height:0px }
 .elog .arr{cursor:pointer;border:dashed 1px;margin:2px 0;height:16px;overflow:hidden;}
 .elog .arr.detail{white-space: pre;height: auto;}
 /*--------FORM ELEMETNS----------*/
@@ -152,7 +152,7 @@ FIELDSET FIELDSET{margin-left:10px;}
 .table .filter td {padding:0; }
 .table TH {padding: 8px 12px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; }
 .table TH:first-child { border-left: 1px solid #ccc; }
-.table TBODY TR { background: #fafafa; }
+.table TBODY TR { background: #fafafa; height: 24px}
 .table TBODY TR:nth-of-type(2n+1) { background: #fff; }
 .table TD {padding: 2px; border-top: 1px solid #ccc; border-right: 1px solid #ccc; }
 .table TD:first-child { border-left: 1px solid #ccc; }

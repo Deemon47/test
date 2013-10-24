@@ -62,7 +62,7 @@ _.pager=
 		if(state==null)
 			state=[1,params.limit*1];
 		this.validate(state,params);
-		return {'from':(state[0]-1)*state[1],'limit':state[1]};
+		return {'page':(state[0]-1),'limit':state[1]};
 	},
 	'validate':function(state,params)
 	{

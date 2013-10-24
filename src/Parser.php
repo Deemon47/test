@@ -40,7 +40,7 @@ class Parser
 				$q='';
 				foreach($this->getAbsolutLinks($links[1]) as $val)
 					$q.='("'.addslashes($val).'","page"),';
-				conn::query('INSERT INTO `tasks`(url,type)VALUES'.rtrim($q,',').' ON DUPLICATE KEY UPDATE status="to_update"');
+				conn::query('INSERT IGNORE INTO `tasks`(url,type)VALUES'.rtrim($q,',')/*.' ON DUPLICATE KEY UPDATE status="to_update"'*/);
 				return true;
 			}
 		}
@@ -58,16 +58,21 @@ class Parser
 			$q='';
 			foreach($this->getAbsolutLinks($links) as $val)
 				$q.='("'.addslashes($val).'","list"),';
-			conn::query('INSERT INTO `tasks`(url,type)VALUES'.rtrim($q,',').' ON DUPLICATE KEY UPDATE status="to_update"');
+			conn::query('INSERT IGNORE INTO `tasks`(url,type)VALUES'.rtrim($q,',')/*.' ON DUPLICATE KEY UPDATE status="to_update"'*/);
 			return true;
 		}
 		return false;
 	}
+	/**
+	 * Выполнить следующую задачу
+	 * @return bool success
+	 */
 	function doNextTask()
 	{
 		$task=conn::selectOneRow('* FROM `tasks` WHERE status IN("to_do","to_update") ORDER BY `status`="to_do",id ');
 		if($task!==false)
 		{
+			$good=false;
 			$html=$this->parseUrl($task->url);
 			/*Получение данных с резюме*/
 			if($task->type=='page')
@@ -92,24 +97,41 @@ class Parser
 					foreach($fields as $val)
 						$q.='("'.$val.'"),';
 					$id=conn::query('INSERT INTO `fields`(`name`) VALUES'.rtrim($q,','),true);
+					$q='';
 					foreach($fields as $ind=>$val)
+					{
+						$q.='ADD COLUMN `'.($ind+$id).'`  text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,';
 						$this->added[$val]=$ind+$id;
+					}
+					$id=conn::query('ALTER TABLE `datas_t` '.rtrim($q,','),true);
+
 				}
-				$q='';
+				$q=$task->id;
+				$f='`task_id`';
 				/*Добавляю значения*/
 				foreach($data as $field=>$val)
-					$q.='('.$task->id.','.$this->added[$field].',"'.addslashes($val).'"),';
-				conn::query('INSERT INTO `datas`(`url_id`,`field_id`,`value`) VALUES'.rtrim($q,','));
-				elog($this->added,'$this->added');
+				{
+					$f.=',`'.$this->added[$field].'`';
+					$q.=',"'.addslashes($val).'"';
+				}
+				conn::query('INSERT INTO `datas_t`('.$f.') VALUES('.$q.')');
+				// foreach($data as $field=>$val)
+				// 	$q.='('.$task->id.','.$this->added[$field].',"'.addslashes($val).'"),';
+				// conn::query('INSERT INTO `datas`(`url_id`,`field_id`,`value`) VALUES'.rtrim($q,','));
+				// elog($this->added,'$this->added');
 
-				conn::query('UPDATE `tasks` set status="success" where id='.$task->id);
+				$good=true;
 			}
 			else
-				$this->addPageTasks($html);
-
-
+				$good=$this->addPageTasks($html);
+			if($good)
+			{
+				conn::query('UPDATE `tasks` set status="success" where id='.$task->id);
+				return true;
+			}
 		}
 		elog($task,'$task');
+		return false;
 	}
 	function getResumeData($html)
 	{
@@ -142,7 +164,7 @@ class Parser
 		elog($data,'$data');
 		return $data;
 	}
-	function parseUrl($url=false)
+	function parseUrl1($url=false)
 	{
 
 		return file_get_contents(!$url?'torg_cat.txt':'vak.txt');
@@ -152,10 +174,10 @@ class Parser
 	 * @param  string $url
 	 * @return string
 	 */
-	function parseUrl1($url=false)
+	function parseUrl($url=false)
 	{
 		if($url==false)
-			$url=$category_url;
+			$url=$this->category_url;
 		$curl = curl_init();//инициализация сессии
 		$proxy =false;
 		$user_agent=Parser::$browsers_list[array_rand( Parser::$browsers_list ,1 )];
