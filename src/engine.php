@@ -13,6 +13,8 @@ $CFG=
 	'mysql_user'=>'',
 	'mysql_pass'=>'',
 	'mysql_base'=>'',
+	'show_debug'=>false,
+	'watch_actions'=>[],
 
 ];
 /**

@@ -6,9 +6,6 @@
  *	@version 1
  *	@author Deemon<a@dee13.ru>
  */
-$ELOG=
-// true;
-false;
 /*Разбор URL */
 	$URL=strtolower(str_replace(['\'','?'.$_SERVER['QUERY_STRING']],'',$_SERVER['REQUEST_URI']));
 	$LINKS=explode('/',substr($URL,1));
@@ -130,7 +127,7 @@ if(count($LINKS)>0 && $LINKS[0]=='ajax')
 		</div>
 	</div>
 </div>
-<?if($ELOG){?>
+<?if($CFG['show_debug']){?>
 	<div class="m-wrap elog">
 		<div class="m-wrap-inner">
 			<div class="m-wrap-cont">
