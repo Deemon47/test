@@ -2,7 +2,7 @@ test
 ====
 Deemon Test Work
 
-To start using
+To start using:
 
 1)copy files to php server root folder
 
